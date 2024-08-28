@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Valute;
 
+use App\Http\Requests\Valute\IndexRequest;
 use App\Http\Resources\Valute\ValuteResource;
 
 class IndexController extends BaseController
 {
-    public function __invoke()
+    public function __invoke(IndexRequest $request)
     {
-        $data = $this->valuteService->getDaily();
+        $query = $request->validated();
+
+        $data = $this->valuteService->getDaily($query);
+
         return ValuteResource::collection($data);
     }
 }

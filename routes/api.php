@@ -10,7 +10,7 @@ Route::group([
 ], function () {
     Route::group(
         [
-            'middleware' => 'jwt.auth',
+            // 'middleware' => 'jwt.auth',
         ],
         function () {
             Route::group(
@@ -79,6 +79,17 @@ Route::group([
                 function () {
                     Route::get('', 'IndexController');
                     Route::post('', 'StoreController');
+                }
+            );
+
+            Route::group(
+                [
+                    'namespace' => "QueryHelper",
+                    'prefix' => 'queryHelper',
+                    'middleware' => ['cache']
+                ],
+                function () {
+                    Route::get('', 'IndexController');
                 }
             );
         }

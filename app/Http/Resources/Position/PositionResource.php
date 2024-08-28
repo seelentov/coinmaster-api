@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Position;
 
+use App\Http\Resources\AbstractResource;
 use App\Http\Resources\AbstractValuteResource;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class PositionResource extends AbstractValuteResource
         $data = $this->resource;
 
         $res = [
-            "date" =>  $data["@attributes"]["Date"],
+            'date' => $data["date"]
         ];
 
         $this->getValute($res, $data);

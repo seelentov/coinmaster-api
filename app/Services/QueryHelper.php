@@ -1,37 +1,61 @@
 <?php
 
-// namespace App\Services;
+namespace App\Services;
 
-// use App\Services\Abstract\AbstractService;
-// use App\Services\Interfaces\IQueryHelper;
+use App\Components\CbrValuteInfo;
+use App\Services\Abstract\AbstractService;
+use App\Services\Interfaces\IQueryHelper;
 
-// class QueryHelper extends AbstractService implements IQueryHelper
-// {
-//     public function getHelp($model, $search, $searchBy, $value)
-//     {
-//         $value = strtolower($value);
+class QueryHelper extends AbstractService implements IQueryHelper
+{
+    private $searchAttributes = [
+        "Name",
+        "EngName",
+        "ParentCode"
+    ];
 
-//         $matches = $model::whereRaw('lower(' . $searchBy . ') like ?', ["%{$value}%"])
-//             ->select($search)
-//             ->get()
-//             ->pluck($search)
-//             ->toArray();
+    private $resAttribute = "Name";
 
-//         uasort($matches, function ($a, $b) use ($value) {
-//             $aCount = substr_count(strtolower($a), $value);
-//             $bCount = substr_count(strtolower($b), $value);
-//             return $bCount <=> $aCount;
-//         });
+    public function __construct(
+        protected readonly ValuteService $valuteService
+    ) {}
+    public function getHelp($query)
+    {
+        $search = strtolower($query["search"]);
 
-//         return array_slice(array_values($matches), 0, 10);
-//     }
+        $res = $this->valuteService->getInfoList();
+        $valuteList = $res["Item"];
 
-//     public function flatten(array $array)
-//     {
-//         $return = array();
-//         array_walk_recursive($array, function ($a) use (&$return) {
-//             $return[] = $a;
-//         });
-//         return $return;
-//     }
-// }
+        $result = [];
+
+        foreach ($valuteList as $valuteItem) {
+            if ($this->checkBysearchAttributes($valuteItem, $search)) {
+                $result[] = $valuteItem[$this->resAttribute];
+            }
+        }
+
+        return $result;
+    }
+
+    private function checkBysearchAttributes($valuteItem, $search)
+    {
+        foreach ($this->searchAttributes as $attribute) {
+            $attrValue = strtolower($valuteItem[$attribute]);
+
+            if (str_contains($attrValue, $search)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function flatten(array $array)
+    {
+        $return = array();
+        array_walk_recursive($array, function ($a) use (&$return) {
+            $return[] = $a;
+        });
+        return $return;
+    }
+}

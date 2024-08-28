@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheMiddleware
 {
-    private $timeSeconds = 60;
+    private $timeSeconds = 3600;
 
     public function handle($request, Closure $next)
     {

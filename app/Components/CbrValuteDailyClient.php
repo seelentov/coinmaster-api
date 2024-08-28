@@ -17,6 +17,7 @@ class CbrValuteDailyClient extends AbstractValuteHttpClient
     {
         $date = implode("/", (array_reverse(explode("/", $date))));
 
-        $this->options["base_uri"] = "https://www.cbr-xml-daily.ru/archive" . $date . "daily_json.js";
+
+        $this->options["base_uri"] = "https://www.cbr-xml-daily.ru/archive/" . $date . "/daily_json.js";
     }
 }
