@@ -10,6 +10,7 @@ class IndexController extends BaseController
     public function __invoke(IndexRequest $request)
     {
         $query = $request->validated();
+        dd($query);
         $data = $this->news->getNewsList($query);
         return NewsResource::collection($data);
     }
