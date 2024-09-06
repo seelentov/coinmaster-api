@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group([
-    'namespace' => "App\Http\Controllers"
+    'namespace' => "App\Http\Controllers",
 ], function () {
     Route::group(
         [
