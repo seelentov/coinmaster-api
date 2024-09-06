@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 
 use App\Models\Message;
-
+use Illuminate\Database\Eloquent\Model;
 use MoonShine\Resources\ModelResource;
-use MoonShine\Decorations\Block;
-use MoonShine\Fields\ID;
 use MoonShine\Fields\Field;
 use MoonShine\Fields\Relationships\HasOne;
 use MoonShine\Fields\Text;
