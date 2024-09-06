@@ -10,6 +10,7 @@ class IndexController extends BaseController
     public function __invoke(IndexRequest $request)
     {
         $query = $request->validated();
+        dd($query);
         $data = $this->valuteService->getDaily($query);
 
         return ValuteResource::collection($data);
