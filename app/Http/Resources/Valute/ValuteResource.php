@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Valute;
 
-use App\Http\Resources\AbstractResource;
 use App\Http\Resources\AbstractValuteResource;
 use App\Http\Resources\Position\PositionResource;
 use Illuminate\Http\Request;

@@ -8,7 +8,6 @@ use App\Http\Requests\Auth\UpdateAvatarRequest;
 use App\Http\Requests\Auth\UpdateExpo;
 use App\Http\Requests\Auth\VerifyRequest;
 use App\Repositories\User\UserRepository;
-use App\Repositories\UserVerifier\UserVerifierRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class AuthController extends Controller
@@ -23,7 +22,7 @@ class AuthController extends Controller
     public function __construct(
         private readonly UserRepository $users
     ) {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'verify', 'updateAvatar']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'verify']]);
     }
 
     /**
@@ -38,11 +37,11 @@ class AuthController extends Controller
         $user = $this->users->get('phone', $credentials['phone']);
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['authorization' => 'Unauthorizationd'], 401);
         }
 
         if (!$user || is_null($user->user_verified_at)) {
-            return response()->json(['error' => 'Not verified'], 402);
+            return response()->json(['authorization' => 'Not verified'], 402);
         }
 
         return $this->respondWithToken($token);
@@ -67,7 +66,7 @@ class AuthController extends Controller
     {
         auth()->logout(true);
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['authorization' => 'Successfully logged out']);
     }
 
     /**
@@ -91,7 +90,7 @@ class AuthController extends Controller
         $data = $request->validated();
 
         $this->users->create($data);
-        return response()->json(['message' => 'Successfully registered']);
+        return response()->json(['authorization' => 'Successfully registered']);
     }
 
     /**
@@ -106,10 +105,10 @@ class AuthController extends Controller
         $data = $request->validated();
 
         if (!$this->users->verify($data['phone'], $data['code'])) {
-            return response()->json(['error' => 'Bad verify code'], 403);
+            return response()->json(['authorization' => 'Bad verify code'], 403);
         }
 
-        return response()->json(['message' => 'Successfully verified']);
+        return response()->json(['authorization' => 'Successfully verified']);
     }
 
     /**
@@ -125,7 +124,7 @@ class AuthController extends Controller
 
         $this->users->updateAvatar($userId, $data["avatar"]);
 
-        return response()->json(['message' => 'Successfully updated']);
+        return response()->json(['authorization' => 'Successfully updated']);
     }
 
     public function updateExpo(UpdateExpo $request)
@@ -135,7 +134,7 @@ class AuthController extends Controller
 
         $this->users->updateExpo($userId, $data['expo_token']);
 
-        return response()->json(['message' => 'Successfully updated']);
+        return response()->json(['authorization' => 'Successfully updated']);
     }
 
     /**

@@ -32,12 +32,14 @@ class UserRepository extends AbstractRepository
         DB::transaction(function () use ($data) {
             $data['password'] = bcrypt("password");
             $data['user_verified_at'] = now();
+
             $user = $this->model::create($data);
-            $verifier = [];
-            $verifier['phone'] = $data['phone'];
-            $code = bcrypt(fake()->randomNumber(6, true));
-            $verifier['code'] = $code;
-            UserVerifier::create($verifier);
+
+            UserVerifier::create([
+                'phone' => $data['phone'],
+                'code' => bcrypt(fake()->randomNumber(6, true))
+            ]);
+
             Settings::create(["user_id" => $user->id]);
         });
     }

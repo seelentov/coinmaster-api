@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 
-
-
 Route::group([
     'namespace' => "App\Http\Controllers"
 ], function () {
@@ -92,6 +90,17 @@ Route::group([
                     Route::get('', 'IndexController');
                 }
             );
+
+            Route::group(
+                [
+                    'namespace' => "Notification",
+                    'prefix' => 'notification',
+                ],
+                function () {
+                    Route::get('', 'IndexController');
+                    Route::patch('checkUpdates', 'CheckController');
+                }
+            );
         }
     );
 
@@ -102,10 +111,10 @@ Route::group([
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
         Route::post('logout', 'AuthController@logout');
-        Route::post('updateAvatar', 'AuthController@updateAvatar');
+        Route::patch('updateAvatar', 'AuthController@updateAvatar');
         Route::post('refresh', 'AuthController@refresh');
-        Route::post('verify', 'AuthController@verify');
+        Route::patch('verify', 'AuthController@verify');
         Route::get('me', 'AuthController@me');
-        Route::post('updateExpo', 'AuthController@updateExpo');
+        Route::patch('updateExpo', 'AuthController@updateExpo');
     });
 });

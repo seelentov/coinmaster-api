@@ -9,8 +9,6 @@ use App\Repositories\Base\Traits\HasUpdate;
 
 class SettingsRepository extends AbstractRepository
 {
-    private $with = "messages";
-
     public function __construct()
     {
         $this->model = new Settings();

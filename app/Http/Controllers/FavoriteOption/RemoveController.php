@@ -9,7 +9,7 @@ class RemoveController extends BaseController
         $entity = $this->favoriteOptions->get('id', $id);
 
         if ($entity->favorite->user_id != auth()->user()->id) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $this->favoriteOptions->remove('id', $id);

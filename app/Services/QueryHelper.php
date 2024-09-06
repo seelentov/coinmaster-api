@@ -39,8 +39,10 @@ class QueryHelper extends AbstractService implements IQueryHelper
 
     private function checkBysearchAttributes($valuteItem, $search)
     {
+        $search = mb_strtolower($search);
+
         foreach ($this->searchAttributes as $attribute) {
-            $attrValue = strtolower($valuteItem[$attribute]);
+            $attrValue = mb_strtolower($valuteItem[$attribute]);
 
             if (str_contains($attrValue, $search)) {
                 return true;

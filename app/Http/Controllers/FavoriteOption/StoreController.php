@@ -11,7 +11,7 @@ class StoreController extends BaseController
         $favorite = $this->favorites->get('id', $favoriteId);
 
         if ($favorite != null && ($favorite->user_id != auth()->user()->id)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $body = $request->validated();
