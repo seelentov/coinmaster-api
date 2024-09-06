@@ -65,7 +65,7 @@ class UserRepository extends AbstractRepository
             $user = $this->model::find($id);
 
             if ($user) {
-                $path = Storage::disk('public')->putFile('images', $avatar);
+                $path = Storage::disk('public')->putFile('uploaded', $avatar);
 
                 $user->update([
                     "avatar_url" => $path,
