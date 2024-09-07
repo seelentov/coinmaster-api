@@ -35,8 +35,8 @@ class AuthController extends Controller
     {
         $credentials = request(['phone', 'password']);
 
-        dump(User::get());
-        dd($credentials);
+        return (['users' => User::get(), "credentials" => $credentials]);
+
         $user = $this->users->get('phone', $credentials['phone']);
 
         if (! $token = auth()->attempt($credentials)) {
