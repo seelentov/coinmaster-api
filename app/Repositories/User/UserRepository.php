@@ -30,7 +30,7 @@ class UserRepository extends AbstractRepository
     public function create($data)
     {
         DB::transaction(function () use ($data) {
-            $data['password'] = bcrypt("password");
+            $data['password'] = bcrypt($data['password']);
             $data['user_verified_at'] = now();
 
             $user = $this->model::create($data);
