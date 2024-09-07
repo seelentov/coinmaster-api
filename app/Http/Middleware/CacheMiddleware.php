@@ -11,6 +11,10 @@ class CacheMiddleware
 
     public function handle($request, Closure $next)
     {
+        $response = $next($request);
+
+        return $response;
+
         $cacheKey = 'cache:' . md5($request->fullUrl());
 
         if (Cache::has($cacheKey)) {
