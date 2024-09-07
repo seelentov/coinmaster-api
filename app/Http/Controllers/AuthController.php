@@ -37,7 +37,10 @@ class AuthController extends Controller
 
         $user = $this->users->get('phone', $credentials['phone']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = auth()->attempt([
+            'phone' => $credentials['phone'],
+            'password' => $credentials['password']
+        ])) {
             return response()->json(['authorization' => 'Wrong login or password'], 401);
         }
 
@@ -83,7 +86,7 @@ class AuthController extends Controller
     /**
      * Register a new user.
      *
-     * @param  \App\Http\Requests\User\StoreRequest  $request
+     * @param  \App\Http\Requests\Auth\StoreRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(StoreRequest $request)
@@ -97,7 +100,7 @@ class AuthController extends Controller
     /**
      * Verify user.
      *
-     * @param  \App\Http\Requests\User\VerifyRequest  $request
+     * @param  \App\Http\Requests\Auth\VerifyRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
 
@@ -115,7 +118,7 @@ class AuthController extends Controller
     /**
      * Update user avatar.
      *
-     * @param  \App\Http\Requests\User\UpdateAvatarRequest  $request
+     * @param  \App\Http\Requests\Auth\UpdateAvatarRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function updateAvatar(UpdateAvatarRequest $request)
