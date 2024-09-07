@@ -37,7 +37,7 @@ class AuthController extends Controller
         $user = $this->users->get('phone', $credentials['phone']);
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['authorization' => 'Unauthorizationd'], 401);
+            return response()->json(['authorization' => 'Wrong login or password'], 401);
         }
 
         if (!$user || is_null($user->user_verified_at)) {
