@@ -37,8 +37,6 @@ class AuthController extends Controller
 
         $user = $this->users->get('phone', $credentials['phone']);
 
-        return ($user);
-
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['authorization' => 'Unauthorizationd'], 401);
         }
