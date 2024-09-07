@@ -30,8 +30,6 @@ class NewsService extends AbstractService implements INewsService
 
         $url = "https://www.google.com/search?q={$query['search']}&tbm=nws&tbs=sbd:1&num={$query['page_size']}&start={$query['page']}&sort=p";
 
-        $this->dom->loadFromUrl("https://www.google.com/search?q=123123&tbm=nws&tbs=sbd:1&num=1&start=1&sort=p");
-
         $this->dom->loadFromUrl($url);
 
         $newsList = [];
