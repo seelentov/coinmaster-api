@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\StoreRequest;
 use App\Http\Requests\Auth\UpdateAvatarRequest;
 use App\Http\Requests\Auth\UpdateExpo;
 use App\Http\Requests\Auth\VerifyRequest;
+use App\Models\User;
 use App\Repositories\User\UserRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -34,6 +35,8 @@ class AuthController extends Controller
     {
         $credentials = request(['phone', 'password']);
 
+        dump(User::get());
+        dd($credentials);
         $user = $this->users->get('phone', $credentials['phone']);
 
         if (! $token = auth()->attempt($credentials)) {
