@@ -17,7 +17,7 @@ class ChatRepository extends AbstractRepository
         $entity = $this->model::firstOrCreate(["identifier" => $identifier], $data);
 
         $entity->load(['messages' => function ($query) {
-            $query->orderBy('created_at', 'asc')->with('user')->paginate($data['page_size'] ?? 10);
+            $query->orderBy('created_at', 'desc')->with('user')->paginate($data['page_size'] ?? 10);
         }]);
 
         return $entity;
