@@ -64,7 +64,7 @@ class ValuteService extends AbstractService implements IValuteService
         $res = $this->client->getClient()->request("GET");
         $posRes = $this->xmlToJson($res);
         $posArray = $posRes["Record"];
-        $data = $this->getValuteInfo("R01010");
+        $data = $this->getValuteInfo($code);
 
         $positions = [];
 
