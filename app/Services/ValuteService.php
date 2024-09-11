@@ -93,6 +93,22 @@ class ValuteService extends AbstractService implements IValuteService
         return null;
     }
 
+    public function getValuteInfoMany($codes)
+    {
+        $res = $this->infoClient->getClient()->request("GET");
+        $data = $this->xmlToJson($res);
+
+        $res = [];
+
+        foreach ($data["Item"] as $item) {
+            if (in_array($item["@attributes"]["ID"], $codes)) {
+                $res[$item["@attributes"]["ID"]] = $item;
+            }
+        }
+
+        return $res;
+    }
+
     public function getInfoList()
     {
         $res = $this->infoClient->getClient()->request("GET");

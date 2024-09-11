@@ -9,6 +9,7 @@ use App\Services\ValuteService;
 class BaseController extends Controller
 {
     public function __construct(
-        protected readonly FavoriteRepository $favorites
+        protected readonly FavoriteRepository $favorites,
+        protected readonly ValuteService $valuteService
     ) {}
 }
