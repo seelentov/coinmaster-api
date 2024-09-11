@@ -106,7 +106,7 @@ class ValuteService extends AbstractService implements IValuteService
                 $code = $item["@attributes"]["ID"];
 
                 $res[$code] = $item;
-                $res[$code]['code'] = $code;
+                $res[$code]['ID'] = $code;
                 $res[$code] = $this->serializeValute($res[$code]);
             }
         }
