@@ -9,7 +9,9 @@ class IndexController extends BaseController
     {
         $userId = auth()->user()->id;
 
+
         $data = $this->favorites->getCollection("user_id", $userId, false);
+        dd($data);
 
         $codes = array_map(fn($fav) => $fav['identifier'], $data);
 
