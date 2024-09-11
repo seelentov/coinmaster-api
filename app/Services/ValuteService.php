@@ -102,7 +102,12 @@ class ValuteService extends AbstractService implements IValuteService
 
         foreach ($data["Item"] as $item) {
             if (in_array($item["@attributes"]["ID"], $codes)) {
-                $res[$item["@attributes"]["ID"]] = $item;
+
+                $code = $item["@attributes"]["ID"];
+
+                $res[$code] = $item;
+                $res[$code]['code'] = $code;
+                $res[$code] = $this->serializeValute($res[$code]);
             }
         }
 
