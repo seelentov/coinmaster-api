@@ -11,9 +11,8 @@ class IndexController extends BaseController
 
 
         $data = $this->favorites->getCollection("user_id", $userId, false);
-        dd($data);
 
-        $codes = array_map(fn($fav) => $fav['identifier'], $data);
+        $codes = array_map(fn($fav) => $fav['identifier'], $data->toArray());
 
         $infos = $this->valuteService->getValuteInfoMany($codes);
 
