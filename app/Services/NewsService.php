@@ -106,7 +106,8 @@ class NewsService extends AbstractService implements INewsService
             "час" => 3600,
             'дн' => 86400,
             'ден' => 86400,
-            'год' => 31536000
+            'год' => 31536000,
+            'нед' => 604800,
         ];
 
         $multiplier = 1;
