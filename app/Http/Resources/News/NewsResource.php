@@ -14,6 +14,7 @@ class NewsResource extends AbstractResource
      */
     public function toArray(Request $request): array
     {
+
         $data = $this->resource;
 
         $res = [

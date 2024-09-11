@@ -17,18 +17,25 @@ class NewsService extends AbstractService implements INewsService
 
     private function encodedQuery($query)
     {
-        $query["search"] = isset($query["search"]) ? urlencode($query["search"]) : "";
-        $query["page_size"] = isset($query["page_size"]) ? urlencode($query["page_size"]) : "";
-        $query["page"] = isset($query["page"]) ? urlencode($query["page"]) : "";
+        if (isset($query["search"])) {
+            foreach ($query["search"] as &$str) {
+                $str = urlencode($str);
+            }
+        }
+
+        $searchCount = isset($query["search"]) ? count($query["search"]) : 1;
+
+        $query["search"] = isset($query["search"]) ? $query["search"] : "";
+        $query["page_size"] = intval((isset($query["page_size"]) ? intval($query["page_size"]) : 10) / $searchCount);
+
+        $query["page"] = isset($query["page"]) ? intval($query["page"]) : 1;
 
         return $query;
     }
 
-    public function getNewsList($query)
+    private function getNewsListSingle($search, $query)
     {
-        $query = $this->encodedQuery($query);
-
-        $url = "https://www.google.com/search?q={$query['search']}&tbm=nws&tbs=sbd:1&num={$query['page_size']}&start={$query['page']}&sort=p";
+        $url = "https://www.google.com/search?q={$search}&tbm=nws&tbs=sbd:1&num={$query['page_size']}&start={$query['page']}&sort=p";
 
         $this->dom->loadFromUrl($url);
 
@@ -42,6 +49,7 @@ class NewsService extends AbstractService implements INewsService
             }
 
             $news = [];
+
 
             $titleElement = strip_tags($card->find('h3')->innerHtml);
             $news['title'] = $titleElement;
@@ -68,5 +76,51 @@ class NewsService extends AbstractService implements INewsService
         }
 
         return $newsList;
+    }
+
+    public function getNewsList($query)
+    {
+        $query = $this->encodedQuery($query);
+
+        $res = [];
+
+        foreach ($query['search'] as $search) {
+            array_push($res, ...$this->getNewsListSingle($search, $query));
+        }
+
+        usort($res, function ($a, $b) {
+            return $this->sortByDate($a, $b);
+        });
+
+        return $res;
+    }
+
+    private function sortByDate($a, $b)
+    {
+        return $this->convertStringDateToSeconds($a['date']) - $this->convertStringDateToSeconds($b['date']);
+    }
+
+    private function convertStringDateToSeconds($dateString)
+    {
+
+        $multiplierTable = [
+            "мин" => 60,
+            "час" => 3600,
+            'дн' => 86400,
+            'ден' => 86400,
+            'год' => 31536000
+        ];
+
+        $multiplier = 1;
+
+        foreach ($multiplierTable as $format => $value) {
+            if (str_contains($dateString, $format)) {
+                $multiplier = $value;
+            }
+        }
+
+        $count = intval($dateString);
+
+        return $count * $multiplier;
     }
 }

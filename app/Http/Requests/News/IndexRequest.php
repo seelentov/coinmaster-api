@@ -7,7 +7,8 @@ class IndexRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'search' => 'string',
+            'search' => 'array',
+            'search.*' => 'string',
             'page_size' => 'integer',
             'page' => 'integer',
         ];
