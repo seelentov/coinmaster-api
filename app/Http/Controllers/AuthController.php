@@ -80,7 +80,9 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        auth()->currentAccessToken()->invalidate();
+
+        return $this->respondWithToken(auth()->currentAccessToken());
     }
 
     /**
