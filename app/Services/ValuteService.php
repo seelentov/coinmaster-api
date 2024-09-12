@@ -36,11 +36,17 @@ class ValuteService extends AbstractService implements IValuteService
         }, (array)$valutes);
 
         if (!empty($query['name'])) {
-            $search = mb_strtolower($query['name']);
 
-            $result = array_filter($result, function ($valute) use ($query, $search) {
+            $result = array_filter($result, function ($valute) use ($query) {
                 $name = mb_strtolower($valute['name']);
-                return str_contains($name, $search);
+
+                foreach ($query['name'] as $queryName) {
+                    $search = mb_strtolower($queryName);
+                    if (str_contains($name, $search)) {
+                        return true;
+                    }
+                }
+                return false;
             });
         }
 
