@@ -50,6 +50,21 @@ class ValuteService extends AbstractService implements IValuteService
             });
         }
 
+        if (!empty($query['code'])) {
+
+            $result = array_filter($result, function ($valute) use ($query) {
+                $name = mb_strtolower(string: $valute['code']);
+
+                foreach ($query['code'] as $queryName) {
+                    $search = mb_strtolower($queryName);
+                    if (str_contains($name, $search)) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
         if (!empty($query['orderBy']) && !empty($query['orderDir'])) {
             usort($result, function ($a, $b) use ($query) {
                 $field = $query['orderBy'];

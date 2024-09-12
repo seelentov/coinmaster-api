@@ -9,6 +9,8 @@ class IndexRequest extends BaseRequest
         return [
             'name' => 'array',
             'name.*' => 'string',
+            'code' => 'array',
+            'code.*' => 'string',
             'orderBy' => 'string',
             'orderDir' => 'string',
             'date' => 'string'
