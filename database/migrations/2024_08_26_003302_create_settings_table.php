@@ -16,6 +16,7 @@ return new class extends Migration
             $table->time('notif_time')->default("12:00");
             $table->boolean('notif_active')->default(true);
             $table->unsignedBigInteger('user_id');
+            $table->enum("lang", ['ru'])->default("ru");
         });
     }
 
