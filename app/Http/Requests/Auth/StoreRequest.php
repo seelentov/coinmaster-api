@@ -9,9 +9,9 @@ class StoreRequest extends BaseRequest
     {
         return [
             'name' => 'string|required|unique:users,name',
-            'email' => 'string|required|unique:users,email',
-            'phone' => 'string|required|unique:users,phone',
-            'password' => 'string|required',
+            'email' => 'string|required|email|unique:users,email',
+            'phone' => 'string|required|unique:users,phone|digits_between:10,15',
+            'password' => 'string|required|min:8',
         ];
     }
 }
