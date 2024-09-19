@@ -5,16 +5,12 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Cache;
 
-class CacheMiddleware
+class CacheMiddleware extends Middleware
 {
     private $timeSeconds = 600;
 
     public function handle($request, Closure $next)
     {
-        $response = $next($request);
-
-        return $response;
-
         $cacheKey = 'cache:' . md5($request->fullUrl());
 
         if (Cache::has($cacheKey)) {
@@ -23,7 +19,7 @@ class CacheMiddleware
 
         $response = $next($request);
 
-        Cache::put($cacheKey, json_decode($response->getContent()), now()->addSecond($this->timeSeconds));
+        Cache::put($cacheKey, json_decode($response->getContent()), now()->addSeconds($this->timeSeconds));
 
         return $response;
     }

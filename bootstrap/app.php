@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\CacheMiddleware;
+use App\Http\Middleware\LangMiddleware;
+use App\Http\Middleware\RequestLogMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'cache' => CacheMiddleware::class,
+            'req_log' => RequestLogMiddleware::class,
+            'lang' => LangMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {})->create();

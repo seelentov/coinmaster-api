@@ -43,7 +43,7 @@ return [
     |
     */
 
-    'path' => env('TELESCOPE_PATH', 'admin/telescope'),
+    'path' => env('TELESCOPE_PATH', 'telescope'),
 
     /*
     |--------------------------------------------------------------------------

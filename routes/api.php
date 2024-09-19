@@ -4,12 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group([
-    'namespace' => "App\Http\Controllers"
+    'namespace' => "App\Http\Controllers",
+    'middleware' => ["lang", 'req_log'],
 ], function () {
     Route::group(
-        [
-            // 'middleware' => 'jwt.auth',
-        ],
+        [],
         function () {
             Route::group(
                 [
@@ -105,7 +104,7 @@ Route::group([
     );
 
     Route::group([
-        'middleware' => 'api',
+        'middleware' => ['api'],
         'prefix' => 'auth'
     ], function () {
         Route::post('register', 'AuthController@register');

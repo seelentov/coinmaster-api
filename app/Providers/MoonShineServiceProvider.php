@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\MoonShine\Resources\ReqLogResource;
 use App\MoonShine\Resources\TelescopeResource;
 use App\MoonShine\Resources\UserResource;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
@@ -14,7 +15,6 @@ use MoonShine\Resources\MoonShineUserRoleResource;
 use MoonShine\Contracts\Resources\ResourceContract;
 use MoonShine\Menu\MenuElement;
 use MoonShine\Pages\Page;
-use MoonShine\Resources\AdminUserResource;
 
 class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 {
@@ -55,6 +55,11 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             MenuItem::make(
                 static fn() => ('Пользователи'),
                 new UserResource()
+            ),
+
+            MenuItem::make(
+                static fn() => ('Request Logs'),
+                new ReqLogResource()
             )
         ];
     }

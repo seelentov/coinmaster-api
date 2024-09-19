@@ -23,7 +23,7 @@ class NewsService extends AbstractService implements INewsService
             }
         }
 
-        $query["search"] = isset($query["search"]) ? $query["search"] : "";
+        $query["search"] = isset($query["search"]) ? $query["search"] : [""];
         $query["page_size"] = isset($query["page_size"]) ? intval($query["page_size"]) : 10;
 
         $query["page"] = isset($query["page"]) ? intval($query["page"]) : 1;

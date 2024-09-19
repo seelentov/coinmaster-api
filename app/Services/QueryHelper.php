@@ -29,7 +29,7 @@ class QueryHelper extends AbstractService implements IQueryHelper
         $result = [];
 
         foreach ($valuteList as $valuteItem) {
-            if ($this->checkBysearchAttributes($valuteItem, $search)) {
+            if ($this->checkBySearchAttributes($valuteItem, $search)) {
                 $result[] = $valuteItem[$this->resAttribute];
             }
         }
@@ -37,7 +37,7 @@ class QueryHelper extends AbstractService implements IQueryHelper
         return $result;
     }
 
-    private function checkBysearchAttributes($valuteItem, $search)
+    private function checkBySearchAttributes($valuteItem, $search)
     {
         $search = mb_strtolower($search);
 
@@ -50,14 +50,5 @@ class QueryHelper extends AbstractService implements IQueryHelper
         }
 
         return false;
-    }
-
-    private function flatten(array $array)
-    {
-        $return = array();
-        array_walk_recursive($array, function ($a) use (&$return) {
-            $return[] = $a;
-        });
-        return $return;
     }
 }

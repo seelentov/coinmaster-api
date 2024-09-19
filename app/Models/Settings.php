@@ -10,6 +10,7 @@ class Settings extends AbstractModel
         'user_id',
         'id',
     ];
+
     const LANG_RU = 'ru';
 
 
