@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRequest;
 use App\Http\Requests\Auth\UpdateAvatarRequest;
 use App\Http\Requests\Auth\UpdateExpo;
-use App\Http\Requests\Auth\VerifyRequest;
+use App\Mail\VerifierMail;
 use App\Repositories\User\UserRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -45,6 +47,10 @@ class AuthController extends Controller
 
         if (!$user || is_null($user->user_verified_at)) {
             return response()->json(['authorization' => __("authorization.NOT_VERIFIED")], 402);
+        }
+
+        if (!$user || !is_null($user->password_reset_token)) {
+            return response()->json(['authorization' => __("authorization.PASS_HAS_BEEN_CHANGED")], 402);
         }
 
         return $this->respondWithToken($token);
@@ -92,26 +98,34 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $this->users->create($data);
+        $user = $this->users->create($data);
+
+        if (!$user) {
+            return response()->json(['authorization' => __("authorization.ERROR")], 501);
+        }
+
+        $activationLink = route('verify', ['token' => $user->activation_token]);
+
+        Mail::to($user->email)->send(new VerifierMail($activationLink));
+
         return response()->json(['authorization' => __("authorization.REGISTERED")]);
     }
 
     /**
      * Verify user.
      *
-     * @param  \App\Http\Requests\Auth\VerifyRequest  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param  Request  $request
      */
 
-    public function verify(VerifyRequest $request)
+    public function verify($token)
     {
-        $data = $request->validated();
+        $user = $this->users->validateCode($token);
 
-        if (!$this->users->verify($data['phone'], $data['code'])) {
-            return response()->json(['authorization' => __("authorization.BAD_VERIDY_CODE")], 403);
+        if (!$user) {
+            return view('message')->with("message", __("authorization.BAD_VERIDY_CODE"));
         }
 
-        return response()->json(['authorization' => __("authorization.VERIFIED")]);
+        return view('message')->with("message", __("authorization.VERIFIED"));
     }
 
     /**

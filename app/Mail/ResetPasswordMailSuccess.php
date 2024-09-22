@@ -6,21 +6,16 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VerifierMail extends Mailable
+class ResetPasswordMailSuccess extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $activationLink;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($activationLink)
-    {
-        $this->activationLink = $activationLink;
-    }
+    public function __construct() {}
 
     /**
      * Build the message.
@@ -29,6 +24,6 @@ class VerifierMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.verifier-mail');
+        return $this->view('mail.password.reset_success');
     }
 }

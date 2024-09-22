@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -89,31 +90,30 @@ Route::group([
                     Route::get('', 'IndexController');
                 }
             );
-
-            Route::group(
-                [
-                    'namespace' => "Notification",
-                    'prefix' => 'notification',
-                ],
-                function () {
-                    Route::get('', 'IndexController');
-                    Route::patch('checkUpdates', 'CheckController');
-                }
-            );
         }
     );
 
     Route::group([
         'middleware' => ['api'],
-        'prefix' => 'auth'
+        'prefix' => 'auth',
     ], function () {
-        Route::post('register', 'AuthController@register');
-        Route::post('login', 'AuthController@login');
-        Route::post('logout', 'AuthController@logout');
-        Route::patch('updateAvatar', 'AuthController@updateAvatar');
-        Route::post('refresh', 'AuthController@refresh');
-        Route::patch('verify', 'AuthController@verify');
-        Route::get('me', 'AuthController@me');
-        Route::patch('updateExpo', 'AuthController@updateExpo');
+        Route::post('register', 'AuthController@register')->name('register');
+        Route::post('login', 'AuthController@login')->name('login');
+        Route::post('logout', 'AuthController@logout')->name('logout');
+        Route::patch('updateAvatar', 'AuthController@updateAvatar')->name('updateAvatar');
+        Route::post('refresh', 'AuthController@refresh')->name(name: 'refresh');
+        Route::post('verify/{token}', 'AuthController@verify')->name('verify');
+        Route::get('me', 'AuthController@me')->name('me');
+        Route::patch('updateExpo', 'AuthController@updateExpo')->name('updateExpo');
     });
+
+    Route::group([
+        'prefix' => 'password',
+    ], function () {
+        Route::post('/email', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+        Route::get('/reset/{token}/{email}', [PasswordResetController::class, 'showResetForm'])->middleware("web")->name('password.reset');
+        Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->name('password.update');
+    });
+
+    Route::get('test', 'TestController')->name('test');
 });

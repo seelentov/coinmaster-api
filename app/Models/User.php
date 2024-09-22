@@ -27,7 +27,9 @@ class User extends Authenticatable implements JWTSubject
         "expo_token",
         "user_verified_at",
         "sub_date",
-        "phone"
+        "phone",
+        "activation_token",
+        "password_reset_token",
     ];
 
     /**
@@ -69,5 +71,10 @@ class User extends Authenticatable implements JWTSubject
     public function settings()
     {
         return $this->hasOne(Settings::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(UserNotification::class);
     }
 }

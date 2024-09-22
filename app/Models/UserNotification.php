@@ -2,9 +2,28 @@
 
 namespace App\Models;
 
-use App\Models\Abstract\AbstractModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class UserNotification extends AbstractModel
+class UserNotification extends Model
 {
-    public $timestamps = true;
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'header',
+        'text',
+        'body',
+        'read',
+    ];
+
+    protected $casts = [
+        'body' => 'json',
+        'read' => 'boolean',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

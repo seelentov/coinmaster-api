@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Components\CbrValuteClient;
-use App\Components\CbrValuteDailyClient;
-use App\Components\CbrValuteInfo;
+use App\Components\Clients\CbrValuteClient;
+use App\Components\Clients\CbrValuteDailyClient;
+use App\Components\Clients\CbrValuteInfo;
 use App\Http\Resources\Valute\ValuteResource;
 use App\Services\Abstract\AbstractService;
 use App\Services\Interfaces\IValuteService;

@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::create('user_notifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("user_id");
-
-            $table->string("header");
-            $table->text("text");
-            $table->json("route_path");
-            $table->boolean("is_checked");
-
+            $table->string("header")->default("");
+            $table->string("text")->default("");
+            $table->boolean("read")->default(false);
+            $table->json("body")->nullable()->default(null);
             $table->timestamps();
         });
     }

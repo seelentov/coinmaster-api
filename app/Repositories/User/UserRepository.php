@@ -4,7 +4,6 @@ namespace App\Repositories\User;
 
 use App\Models\Settings;
 use App\Models\User;
-use App\Models\UserVerifier;
 
 use App\Repositories\Base\Abstract\AbstractRepository;
 
@@ -12,7 +11,7 @@ use App\Repositories\Base\Traits\HasGet;
 use App\Repositories\Base\Traits\HasUpdate;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class UserRepository extends AbstractRepository
@@ -31,33 +30,52 @@ class UserRepository extends AbstractRepository
     {
         DB::transaction(function () use ($data) {
             $data['password'] = bcrypt($data['password']);
-            $data['user_verified_at'] = now();
+
+            $data['activation_token'] = Str::random(60);
 
             $user = $this->model::create($data);
 
-            UserVerifier::create([
-                'phone' => $data['phone'],
-                'code' => bcrypt(fake()->randomNumber(6, true))
-            ]);
-
             Settings::create(["user_id" => $user->id]);
         });
+
+        return $this->model::where('email', $data['email'])->first();
     }
 
-    public function verify($phone, $code)
+    public function getResetPasswordToken($email)
     {
-        $verifiersQuery = UserVerifier::where('phone', $phone);
+        $user = $this->model->where('email', $email)->first();
 
-        foreach ($verifiersQuery->get() as $verifier) {
-            if (Hash::check($code, $verifier->code)) {
-                $verifiersQuery->delete();
-                $this->model::where("phone", $phone)->update(["user_verified_at" => now()]);
-                return true;
-            }
-        }
+        $token = Str::random(60);
 
-        return false;
+        $user->update([
+            "password_reset_token" =>  $token,
+        ]);
+
+        return $token;
     }
+
+    public function validatePasswordToken($token, $email)
+    {
+        $user = $this->model->where('email', $email)->where('password_reset_token', $token)->first();
+
+        return $user;
+    }
+
+
+    public function changePassword($email, $token, $newPassword)
+    {
+        $newPassword = bcrypt($newPassword);
+
+        $user = User::where('email', $email)->where('password_reset_token', $token)->first();
+
+        $user->update([
+            "password" =>  $newPassword,
+            "password_reset_token" => null
+        ]);
+
+        return $user;
+    }
+
 
     public function updateAvatar($id, $avatar)
     {
@@ -74,6 +92,22 @@ class UserRepository extends AbstractRepository
             }
         });
     }
+
+    public function validateCode($token)
+    {
+        $user = $this->model->where("activation_token", $token)->first();
+
+        if (!$user) {
+            return false;
+        }
+
+        $user->update([
+            "activation_token" => null,
+        ]);
+
+        return $this->activateUser($user->id);
+    }
+
     public function activateUser($id)
     {
         $user = $this->model::find($id)->update(["user_verified_at" => now()]);;

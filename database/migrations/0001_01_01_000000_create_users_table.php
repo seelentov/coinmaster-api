@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->timestamp('user_verified_at')->nullable();
+            $table->string('password_reset_token')->nullable();
+            $table->string('activation_token')->nullable();
             $table->string('password');
             $table->text('expo_token')->nullable();
             $table->dateTime("sub_date")->default(now()->addDays(30));
@@ -31,6 +33,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
     }
 };

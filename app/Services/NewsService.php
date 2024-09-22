@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Components\NewsClient;
 use App\Services\Abstract\AbstractService;
 use App\Services\Interfaces\INewsService;
 use PHPHtmlParser\Dom;
