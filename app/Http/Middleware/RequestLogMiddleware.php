@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Repositories\RequestLog\RequestLogRepository;
 use Closure;
 use Illuminate\Support\Facades\Log;
 

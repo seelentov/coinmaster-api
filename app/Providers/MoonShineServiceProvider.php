@@ -56,11 +56,6 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 static fn() => ('Пользователи'),
                 new UserResource()
             ),
-
-            MenuItem::make(
-                static fn() => ('Request Logs'),
-                new ReqLogResource()
-            )
         ];
     }
 

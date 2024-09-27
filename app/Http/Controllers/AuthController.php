@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreRequest;
 use App\Http\Requests\Auth\UpdateAvatarRequest;
 use App\Http\Requests\Auth\UpdateExpo;
+use App\Jobs\SendMail;
 use App\Mail\VerifierMail;
 use App\Repositories\User\UserRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -106,7 +106,10 @@ class AuthController extends Controller
 
         $activationLink = route('verify', ['token' => $user->activation_token]);
 
-        Mail::to($user->email)->send(new VerifierMail($activationLink));
+        SendMail::dispatch(
+            $user->email,
+            new VerifierMail($activationLink)
+        );
 
         return response()->json(['authorization' => __("authorization.REGISTERED")]);
     }

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'namespace' => "App\Http\Controllers",
-    'middleware' => ["lang", 'req_log'],
+    'middleware' => ["lang"],
 ], function () {
     Route::group(
         [],
@@ -94,25 +94,28 @@ Route::group([
     );
 
     Route::group([
-        'middleware' => ['api'],
         'prefix' => 'auth',
     ], function () {
-        Route::post('register', 'AuthController@register')->name('register');
-        Route::post('login', 'AuthController@login')->name('login');
-        Route::post('logout', 'AuthController@logout')->name('logout');
-        Route::patch('updateAvatar', 'AuthController@updateAvatar')->name('updateAvatar');
-        Route::post('refresh', 'AuthController@refresh')->name(name: 'refresh');
-        Route::post('verify/{token}', 'AuthController@verify')->name('verify');
-        Route::get('me', 'AuthController@me')->name('me');
-        Route::patch('updateExpo', 'AuthController@updateExpo')->name('updateExpo');
-    });
+        Route::group([
+            'middleware' => ['api'],
+        ], function () {
+            Route::post('register', 'AuthController@register')->name('register');
+            Route::post('login', 'AuthController@login')->name('login');
+            Route::post('logout', 'AuthController@logout')->name('logout');
+            Route::patch('updateAvatar', 'AuthController@updateAvatar')->name('updateAvatar');
+            Route::post('refresh', 'AuthController@refresh')->name(name: 'refresh');
+            Route::post('verify/{token}', 'AuthController@verify')->name('verify');
+            Route::get('me', 'AuthController@me')->name('me');
+            Route::patch('updateExpo', 'AuthController@updateExpo')->name('updateExpo');
+        });
 
-    Route::group([
-        'prefix' => 'password',
-    ], function () {
-        Route::post('/email', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
-        Route::get('/reset/{token}/{email}', [PasswordResetController::class, 'showResetForm'])->middleware("web")->name('password.reset');
-        Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->name('password.update');
+        Route::group([
+            'prefix' => 'password',
+        ], function () {
+            Route::post('/email', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+            Route::get('/reset/{token}/{email}', [PasswordResetController::class, 'showResetForm'])->middleware("web")->name('password.reset');
+            Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->name('password.update');
+        });
     });
 
     Route::get('test', 'TestController')->name('test');

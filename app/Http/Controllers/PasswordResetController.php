@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PasswordReset\ResetPasswordRequest;
 use App\Http\Requests\PasswordReset\SendResetLinkRequest;
+use App\Jobs\SendMail;
 use App\Mail\ResetPasswordMail;
 use App\Mail\ResetPasswordMailSuccess;
 use App\Repositories\User\UserRepository;
-use Illuminate\Support\Facades\Mail;
 
 class PasswordResetController extends Controller
 {
@@ -24,7 +24,10 @@ class PasswordResetController extends Controller
 
         $resetLink = route('password.reset', ['token' => $resetToken, 'email' => $request["email"]]);
 
-        Mail::to($request["email"])->send(new ResetPasswordMail($resetLink));
+        SendMail::dispatch(
+            $request["email"],
+            new ResetPasswordMail($resetLink)
+        );
 
         return response()->json(['authorization' => __("authorization.SEND_TO_EMAIL")]);
     }
@@ -63,7 +66,10 @@ class PasswordResetController extends Controller
             return back()->withErrors(['email' => __("authorization.PASS_CHANGE_ERR")]);
         }
 
-        Mail::to($user->email)->send(new ResetPasswordMailSuccess());
+        SendMail::dispatch(
+            $user->email,
+            new ResetPasswordMailSuccess()
+        );
 
         return view('message')->with("message", __("authorization.PASS_CHANGE_OK"));
     }
